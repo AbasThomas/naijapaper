@@ -1,0 +1,184 @@
+NaijaPaper Flutter Frontend - Complete Folder Structure
+========================================================
+
+lib/
+│
+├── main.dart                                    ✅ App entry point with Riverpod
+│
+├── core/                                        ✅ Core infrastructure (100%)
+│   ├── constants/
+│   │   └── api_constants.dart                  ✅ All API endpoints & constants
+│   ├── network/
+│   │   ├── dio_client.dart                     ✅ Dio singleton with interceptors
+│   │   └── jwt_interceptor.dart                ✅ Auto-refresh JWT on 401
+│   ├── router/
+│   │   └── app_router.dart                     ✅ GoRouter with 42 routes
+│   ├── theme/
+│   │   ├── app_colors.dart                     ✅ Re-exports app_theme
+│   │   └── app_theme.dart                      ✅ Complete color palette
+│   └── utils/
+│       ├── date_utils.dart                     ✅ Date formatting helpers
+│       └── validators.dart                     ✅ Form validation functions
+│
+├── features/                                    ⚠️ Feature modules (40% complete)
+│   │
+│   ├── auth/                                   ✅ Authentication (80%)
+│   │   ├── data/
+│   │   │   └── auth_repository.dart            ✅ Auth API calls
+│   │   ├── domain/
+│   │   │   └── auth_user.dart                  ✅ User model
+│   │   └── presentation/
+│   │       ├── splash_screen.dart              ✅ App launch screen
+│   │       ├── welcome_screen.dart             ✅ Onboarding carousel
+│   │       ├── signup_screen.dart              ✅ Phone OTP + OAuth
+│   │       ├── otp_screen.dart                 ✅ 6-digit verification
+│   │       └── login_screen.dart               ✅ Returning user login
+│   │
+│   ├── onboarding/                             ⚠️ Onboarding (40%)
+│   │   ├── profile_setup_screen.dart           ⚠️ Exam context collection
+│   │   ├── subject_selection_screen.dart       ⚠️ Choose subjects
+│   │   └── notification_permission_screen.dart ✅ Push notification opt-in
+│   │
+│   ├── dashboard/                              ⚠️ Dashboard (30%)
+│   │   ├── dashboard_screen.dart               ⚠️ Main hub
+│   │   ├── heatmap_screen.dart                 ⚠️ Topic mastery visualization
+│   │   └── study_plan_screen.dart              ⚠️ 30-day calendar
+│   │
+│   ├── practice/                               ⚠️ Practice (20%)
+│   │   ├── practice_hub_screen.dart            ⚠️ Practice modes entry
+│   │   ├── mock_setup_screen.dart              ⚠️ Configure mock exam
+│   │   ├── active_mock_screen.dart             ⚠️ CBT simulation
+│   │   ├── mock_results_screen.dart            ⚠️ Score display
+│   │   ├── answer_review_screen.dart           ⚠️ Question review
+│   │   ├── question_bank_screen.dart           ⚠️ Browse questions
+│   │   ├── flashcard_screen.dart               ⚠️ Spaced repetition
+│   │   └── daily_drill_screen.dart             ⚠️ 5-question drill
+│   │
+│   ├── ai_tutor/                               ⚠️ AI Tutor (10%)
+│   │   ├── ai_tutor_home_screen.dart           ⚠️ Chat history
+│   │   ├── ai_chat_screen.dart                 ⚠️ Conversational tutor
+│   │   └── ai_proctor_results_screen.dart      ⚠️ Post-exam analysis
+│   │
+│   ├── community/                              ⚠️ Community (10%)
+│   │   ├── community_hub_screen.dart           ⚠️ Social features entry
+│   │   ├── study_group_screen.dart             ⚠️ Real-time chat
+│   │   ├── forum_screen.dart                   ⚠️ Q&A board
+│   │   ├── forum_question_screen.dart          ⚠️ Question thread
+│   │   └── live_room_screen.dart               ⚠️ Voice co-study
+│   │
+│   ├── profile/                                ⚠️ Profile (15%)
+│   │   ├── profile_screen.dart                 ⚠️ User identity & stats
+│   │   ├── edit_profile_screen.dart            ⚠️ Update info
+│   │   ├── settings_screen.dart                ⚠️ App configuration
+│   │   ├── offline_manager_screen.dart         ⚠️ Download subjects
+│   │   ├── parent_dashboard_screen.dart        ⚠️ Guardian view
+│   │   ├── subscription_screen.dart            ⚠️ Premium plans
+│   │   └── leaderboard_screen.dart             ⚠️ XP rankings
+│   │
+│   ├── gamification/                           ⚠️ Gamification (10%)
+│   │   ├── achievements_screen.dart            ⚠️ Badge gallery
+│   │   └── challenges_screen.dart              ⚠️ Weekly challenges
+│   │
+│   └── tracker/                                ⚠️ Tracker (10%)
+│       ├── tracker_screen.dart                 ⚠️ Exam & scholarship hub
+│       └── tracker_detail_screen.dart          ⚠️ Event details
+│
+├── shared/                                      ⚠️ Shared components (60%)
+│   ├── widgets/                                ✅ Reusable widgets (100%)
+│   │   ├── app_button.dart                     ✅ Primary/outlined button
+│   │   ├── app_card.dart                       ✅ Card component
+│   │   ├── subject_chip.dart                   ✅ Subject tags
+│   │   ├── score_circle.dart                   ✅ Animated score display
+│   │   ├── streak_ring.dart                    ✅ Streak visualization
+│   │   └── shimmer_loader.dart                 ✅ Loading skeletons
+│   └── providers/                              ❌ Riverpod providers (0%)
+│       ├── auth_provider.dart                  ❌ TODO
+│       ├── connectivity_provider.dart          ❌ TODO
+│       └── theme_provider.dart                 ❌ TODO
+│
+└── local/                                       ⚠️ Local storage (50%)
+    ├── drift/                                  ⚠️ SQLite database
+    │   ├── app_database.dart                   ✅ Schema defined (7 tables)
+    │   ├── app_database.g.dart                 ❌ Run build_runner to generate
+    │   └── daos/                               ❌ Data access objects (0%)
+    │       ├── questions_dao.dart              ❌ TODO
+    │       ├── progress_dao.dart               ❌ TODO
+    │       └── sync_queue_dao.dart             ❌ TODO
+    └── hive/
+        └── hive_service.dart                   ✅ Key-value storage
+
+Documentation Files:
+====================
+├── README_FLUTTER_STRUCTURE.md                 ✅ Complete structure guide
+├── IMPLEMENTATION_GUIDE.md                     ✅ Step-by-step implementation
+├── PROJECT_STATUS.md                           ✅ Current progress & next steps
+└── FOLDER_TREE.txt                             ✅ This file
+
+Root Configuration Files:
+=========================
+├── pubspec.yaml                                ✅ All dependencies configured
+├── analysis_options.yaml                       ✅ Linting rules
+├── .gitignore                                  ✅ Git ignore patterns
+├── .metadata                                   ✅ Flutter metadata
+└── README.md                                   ⚠️ Update with project info
+
+Android Configuration:
+======================
+android/
+├── app/
+│   ├── build.gradle.kts                        ✅ Gradle config
+│   ├── src/main/AndroidManifest.xml            ✅ Permissions declared
+│   └── google-services.json                    ❌ Add from Firebase Console
+└── build.gradle.kts                            ✅ Project-level Gradle
+
+iOS Configuration:
+==================
+ios/
+├── Runner/
+│   ├── Info.plist                              ✅ Permissions declared
+│   └── GoogleService-Info.plist                ❌ Add from Firebase Console
+└── Runner.xcodeproj/                           ✅ Xcode project configured
+
+Legend:
+=======
+✅ = Complete and functional
+⚠️ = Placeholder or partial implementation
+❌ = Not started / needs to be created
+
+Statistics:
+===========
+Total Files Created: 68
+Total Lines of Code: ~4,500
+Completion: 35%
+
+Core Infrastructure: 100% ✅
+Shared Widgets: 100% ✅
+Auth Feature: 80% ⚠️
+Other Features: 10-40% ⚠️
+State Management: 0% ❌
+Testing: 0% ❌
+
+Next Steps:
+===========
+1. Run: dart run build_runner build --delete-conflicting-outputs
+2. Add Firebase config files (google-services.json, GoogleService-Info.plist)
+3. Create Riverpod providers in shared/providers/
+4. Implement OAuth sign-in logic
+5. Build dashboard with real API integration
+6. Implement mock exam flow
+7. Add offline sync service
+8. Write tests
+
+Critical Path to MVP (12 weeks):
+=================================
+Week 1-2:  Complete auth flow + providers
+Week 3-4:  Dashboard + mock exam flow
+Week 5-6:  Heatmap + study plan + AI tutor
+Week 7-8:  Community + gamification
+Week 9-10: Offline sync + polish
+Week 11-12: Testing + bug fixes
+
+For detailed implementation instructions, see:
+- IMPLEMENTATION_GUIDE.md
+- README_FLUTTER_STRUCTURE.md
+- PROJECT_STATUS.md
