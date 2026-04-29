@@ -3,8 +3,18 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'app_database.g.dart';
+
+// ─── Riverpod Provider ────────────────────────────────────────────────────
+
+/// Global database provider
+final appDatabaseProvider = Provider<AppDatabase>((ref) {
+  final database = AppDatabase();
+  ref.onDispose(() => database.close());
+  return database;
+});
 
 // ─── Table Definitions ────────────────────────────────────────────────────
 

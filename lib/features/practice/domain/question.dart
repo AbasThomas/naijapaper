@@ -1,6 +1,7 @@
 class Question {
   final String id;
   final String subjectId;
+  final String subjectName;
   final String topicId;
   final String topicName;
   final int year;
@@ -14,10 +15,12 @@ class Question {
   final String? explanationEn;
   final String? explanationPidgin;
   final String type;
+  final String examType;
 
   Question({
     required this.id,
     required this.subjectId,
+    required this.subjectName,
     required this.topicId,
     required this.topicName,
     required this.year,
@@ -31,12 +34,14 @@ class Question {
     this.explanationEn,
     this.explanationPidgin,
     required this.type,
+    required this.examType,
   });
 
   factory Question.fromJson(Map<String, dynamic> json) {
     return Question(
       id: json['id'] as String,
       subjectId: json['subjectId'] as String,
+      subjectName: json['subjectName'] as String? ?? '',
       topicId: json['topicId'] as String,
       topicName: json['topicName'] as String? ?? '',
       year: json['year'] as int,
@@ -50,6 +55,7 @@ class Question {
       explanationEn: json['explanationEn'] as String?,
       explanationPidgin: json['explanationPidgin'] as String?,
       type: json['type'] as String? ?? 'MCQ',
+      examType: json['examType'] as String? ?? 'JAMB',
     );
   }
 
@@ -57,6 +63,7 @@ class Question {
     return {
       'id': id,
       'subjectId': subjectId,
+      'subjectName': subjectName,
       'topicId': topicId,
       'topicName': topicName,
       'year': year,
@@ -70,6 +77,7 @@ class Question {
       'explanationEn': explanationEn,
       'explanationPidgin': explanationPidgin,
       'type': type,
+      'examType': examType,
     };
   }
 

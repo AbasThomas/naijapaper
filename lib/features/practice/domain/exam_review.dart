@@ -3,10 +3,16 @@ import 'question.dart';
 class ExamReview {
   final String sessionId;
   final List<ReviewQuestion> questions;
+  final int correctCount;
+  final int wrongCount;
+  final int skippedCount;
 
   ExamReview({
     required this.sessionId,
     required this.questions,
+    required this.correctCount,
+    required this.wrongCount,
+    required this.skippedCount,
   });
 
   factory ExamReview.fromJson(Map<String, dynamic> json) {
@@ -15,37 +21,26 @@ class ExamReview {
       questions: (json['questions'] as List)
           .map((q) => ReviewQuestion.fromJson(q))
           .toList(),
+      correctCount: json['correctCount'] as int,
+      wrongCount: json['wrongCount'] as int,
+      skippedCount: json['skippedCount'] as int,
     );
   }
 
-  List<ReviewQuestion> get correctQuestions =>
-      questions.where((q) => q.isCorrect).toList();
-  
-  List<ReviewQuestion> get wrongQuestions =>
-      questions.where((q) => !q.isCorrect && q.userAnswer != null).toList();
-  
-  List<ReviewQuestion> get skippedQuestions =>
-      questions.where((q) => q.userAnswer == null).toList();
-  
-  List<ReviewQuestion> get flaggedQuestions =>
-      questions.where((q) => q.isFlagged).toList();
+  int get totalQuestions => questions.length;
 }
 
 class ReviewQuestion {
   final Question question;
   final String? userAnswer;
   final bool isCorrect;
-  final bool isFlagged;
-  final int timeTakenSeconds;
-  final String? aiExplanation;
+  final int timeSpentSeconds;
 
   ReviewQuestion({
     required this.question,
     this.userAnswer,
     required this.isCorrect,
-    required this.isFlagged,
-    required this.timeTakenSeconds,
-    this.aiExplanation,
+    required this.timeSpentSeconds,
   });
 
   factory ReviewQuestion.fromJson(Map<String, dynamic> json) {
@@ -53,12 +48,9 @@ class ReviewQuestion {
       question: Question.fromJson(json['question']),
       userAnswer: json['userAnswer'] as String?,
       isCorrect: json['isCorrect'] as bool,
-      isFlagged: json['isFlagged'] as bool? ?? false,
-      timeTakenSeconds: json['timeTakenSeconds'] as int? ?? 0,
-      aiExplanation: json['aiExplanation'] as String?,
+      timeSpentSeconds: json['timeSpentSeconds'] as int? ?? 0,
     );
   }
 
-  bool get isSkipped => userAnswer == null;
-  bool get isWrong => !isCorrect && userAnswer != null;
+  bool get wasSkipped => userAnswer == null;
 }
