@@ -1,175 +1,160 @@
-/// API and storage constants for NaijaPaper.
+/// API Constants — Base URLs, endpoints, and storage keys
 class ApiConstants {
   ApiConstants._();
 
   // ─── Base URLs ────────────────────────────────────────────────────────────
-  static const String baseUrl =
-      String.fromEnvironment('API_URL', defaultValue: 'https://api.naijapaper.com');
-  static const String apiVersion = '/api/v1';
-  static const String apiBaseUrl = '$baseUrl$apiVersion';
+  
+  /// Production API base URL
+  static const String baseUrl = 'https://api.naijapaper.com/api/v1';
+  
+  /// Staging API base URL (for testing)
+  static const String stagingUrl = 'https://staging-api.naijapaper.com/api/v1';
+  
+  /// WebSocket base URL
+  static const String wsUrl = 'https://api.naijapaper.com';
+  
+  /// R2 CDN base URL for assets
+  static const String cdnUrl = 'https://r2.naijapaper.com';
 
-  // ─── Auth ─────────────────────────────────────────────────────────────────
+  // ─── API Endpoints ────────────────────────────────────────────────────────
+  
+  // Auth
   static const String sendOtp = '/auth/send-otp';
   static const String verifyOtp = '/auth/verify-otp';
-  static const String authGoogle = '/auth/google';
-  static const String authApple = '/auth/apple';
-  static const String authRefresh = '/auth/refresh';
-  static const String authLogout = '/auth/logout';
-
-  // ─── Users ────────────────────────────────────────────────────────────────
-  static const String usersMe = '/users/me';
-  static const String usersMeAvatar = '/users/me/avatar';
-  static const String usersMeAvatarPresign = '/users/me/avatar/presign';
-  static const String usersMeFcmToken = '/users/me/fcm-token';
-  static const String usersMeSubjects = '/users/me/subjects';
-  static const String usersMeAiQuota = '/users/me/ai-quota';
-
-  // ─── Subjects ─────────────────────────────────────────────────────────────
+  static const String googleAuth = '/auth/google';
+  static const String appleAuth = '/auth/apple';
+  static const String refreshToken = '/auth/refresh';
+  static const String logout = '/auth/logout';
+  
+  // Users
+  static const String userMe = '/users/me';
+  static const String userAvatar = '/users/me/avatar';
+  static const String userAvatarPresign = '/users/me/avatar/presign';
+  static const String userFcmToken = '/users/me/fcm-token';
+  static const String userAiQuota = '/users/me/ai-quota';
+  static const String userSubjects = '/users/me/subjects';
+  
+  // Subjects & Questions
   static const String subjects = '/subjects';
-  static String subjectBundle(String id) => '/subjects/$id/bundle';
-
-  // ─── Questions ────────────────────────────────────────────────────────────
   static const String questions = '/questions';
-  static String question(String id) => '/questions/$id';
-
-  // ─── Exams ────────────────────────────────────────────────────────────────
+  
+  // Exams
   static const String examsCreate = '/exams/create';
   static const String examsRecent = '/exams/recent';
-  static String exam(String id) => '/exams/$id';
-  static String examSubmit(String id) => '/exams/$id/submit';
-  static String examResults(String id) => '/exams/$id/results';
-  static String examReview(String id) => '/exams/$id/review';
-
-  // ─── Drills ───────────────────────────────────────────────────────────────
+  
+  // Drills
   static const String drillsToday = '/drills/today';
   static const String drillsComplete = '/drills/complete';
-
-  // ─── AI ───────────────────────────────────────────────────────────────────
-  static String aiExplain(String questionId) => '/ai/explain/$questionId';
-  static const String aiChats = '/ai/chats';
-  static String aiChatMessages(String chatId) => '/ai/chats/$chatId/messages';
-  static String aiProctorAnalysis(String sessionId) =>
-      '/ai/proctor-analysis/$sessionId';
-  static const String aiFlashcardsGenerate = '/ai/flashcards/generate';
-
-  // ─── Flashcards ───────────────────────────────────────────────────────────
-  static const String flashcardDecks = '/flashcards/decks';
-  static const String flashcardsDueToday = '/flashcards/due-today';
-  static String flashcardCardReview(String id) => '/flashcards/cards/$id/review';
-
-  // ─── Study Plans ──────────────────────────────────────────────────────────
-  static const String studyPlansMe = '/study-plans/me';
-  static const String studyPlansRegenerate = '/study-plans/regenerate';
-  static String studyPlanTask(String taskId) =>
-      '/study-plans/me/tasks/$taskId';
-
-  // ─── Progress ─────────────────────────────────────────────────────────────
+  
+  // Progress
   static const String progressHeatmap = '/progress/heatmap';
   static const String progressSummary = '/progress/summary';
   static const String progressStats = '/progress/stats';
-
-  // ─── Gamification ─────────────────────────────────────────────────────────
+  
+  // AI
+  static const String aiChats = '/ai/chats';
+  static const String aiFlashcardsGenerate = '/ai/flashcards/generate';
+  
+  // Gamification
   static const String leaderboard = '/leaderboard';
   static const String leaderboardMe = '/leaderboard/me';
   static const String achievements = '/achievements';
   static const String achievementsProgress = '/achievements/progress';
   static const String challengesActive = '/challenges/active';
-  static String challengeJoin(String id) => '/challenges/$id/join';
-  static String challengeLeaderboard(String id) => '/challenges/$id/leaderboard';
-
-  // ─── Community ────────────────────────────────────────────────────────────
+  
+  // Flashcards
+  static const String flashcardsDecks = '/flashcards/decks';
+  static const String flashcardsDueToday = '/flashcards/due-today';
+  
+  // Study Plans
+  static const String studyPlansMe = '/study-plans/me';
+  static const String studyPlansRegenerate = '/study-plans/regenerate';
+  
+  // Community
   static const String groups = '/groups';
-  static String groupMessages(String id) => '/groups/$id/messages';
-  static String groupJoin(String id) => '/groups/$id/join';
-  static String groupLeave(String id) => '/groups/$id/leave';
-  static const String forumQuestions = '/forums/questions';
-  static String forumQuestion(String id) => '/forums/questions/$id';
-  static String forumQuestionAnswers(String id) =>
-      '/forums/questions/$id/answers';
-  static String forumAnswerVote(String id) => '/forums/answers/$id/vote';
-  static String forumQuestionVote(String id) => '/forums/questions/$id/vote';
-  static String forumAnswerAccept(String id) => '/forums/answers/$id/accept';
+  static const String forumsQuestions = '/forums/questions';
   static const String forumsTrending = '/forums/trending';
   static const String liveRoomsUpcoming = '/live-rooms/upcoming';
-
-  // ─── Notifications ────────────────────────────────────────────────────────
+  
+  // Notifications
   static const String notifications = '/notifications';
-  static String notificationRead(String id) => '/notifications/$id/read';
   static const String notificationsReadAll = '/notifications/read-all';
-
-  // ─── Subscriptions ────────────────────────────────────────────────────────
-  static const String subscriptionPlans = '/subscriptions/plans';
-  static const String subscriptionInitiate = '/subscriptions/initiate';
-  static const String subscriptionMe = '/subscriptions/me';
-
-  // ─── Tracker ──────────────────────────────────────────────────────────────
+  
+  // Payments & Subscriptions
+  static const String subscriptionsPlans = '/subscriptions/plans';
+  static const String subscriptionsInitiate = '/subscriptions/initiate';
+  static const String subscriptionsMe = '/subscriptions/me';
+  
+  // Tracker
   static const String trackerExams = '/tracker/exams';
   static const String trackerScholarships = '/tracker/scholarships';
-  static String trackerItem(String type, String id) => '/tracker/$type/$id';
   static const String trackerReminders = '/tracker/reminders';
-
-  // ─── Parents ──────────────────────────────────────────────────────────────
+  
+  // Parents
   static const String parentsInvite = '/parents/invite';
   static const String parentsJoin = '/parents/join';
-  static String parentStudentSummary(String id) =>
-      '/parents/students/$id/summary';
-  static String parentStudentHeatmap(String id) =>
-      '/parents/students/$id/heatmap';
-  static String parentStudentActivity(String id) =>
-      '/parents/students/$id/activity';
-  static const String parentsNotificationPrefs =
-      '/parents/notifications/preferences';
-
-  // ─── Admin ────────────────────────────────────────────────────────────────
+  
+  // Admin
   static const String adminOverview = '/admin/overview';
   static const String adminStudents = '/admin/students';
-  static String adminStudent(String id) => '/admin/students/$id';
   static const String adminBroadcast = '/admin/broadcast';
-  static const String adminInstitutions = '/admin/institutions';
-  static const String adminCohortReport = '/admin/reports/cohort';
-
-  // ─── Reports ──────────────────────────────────────────────────────────────
+  
+  // Reports
   static const String reportsGenerate = '/reports/generate';
-
-  // ─── Sync ─────────────────────────────────────────────────────────────────
+  
+  // Sync
   static const String syncBatch = '/sync/batch';
-
-  // ─── Dashboard ────────────────────────────────────────────────────────────
+  
+  // Dashboard
   static const String dashboardSummary = '/dashboard/summary';
   static const String dashboardUpcoming = '/dashboard/upcoming';
-
-  // ─── Bookmarks ────────────────────────────────────────────────────────────
+  
+  // Bookmarks
   static const String bookmarks = '/bookmarks';
-  static String bookmark(String questionId) => '/bookmarks/$questionId';
-
-  // ─── Referrals ────────────────────────────────────────────────────────────
+  
+  // Referrals
   static const String referralsApply = '/referrals/apply';
-}
 
-/// Hive box names and key constants.
-class StorageKeys {
-  StorageKeys._();
-
-  // Hive box names
+  // ─── Storage Keys ─────────────────────────────────────────────────────────
+  
+  /// Secure storage keys (flutter_secure_storage)
+  static const String accessTokenKey = 'access_token';
+  static const String refreshTokenKey = 'refresh_token';
+  static const String userIdKey = 'user_id';
+  
+  /// Hive box names
   static const String settingsBox = 'settings';
   static const String cacheBox = 'cache';
+  
+  /// Hive keys
+  static const String languagePrefKey = 'language_pref';
+  static const String themeModeKey = 'theme_mode';
+  static const String notificationsPrefKey = 'notifications_pref';
+  static const String onboardingCompleteKey = 'onboarding_complete';
+  static const String lastSyncKey = 'last_sync';
 
-  // Secure storage keys
-  static const String accessToken = 'access_token';
-  static const String refreshToken = 'refresh_token';
-  static const String userId = 'user_id';
-
-  // Settings keys
-  static const String languagePref = 'language_pref';
-  static const String darkMode = 'dark_mode';
-  static const String fontSize = 'font_size';
-  static const String highContrast = 'high_contrast';
-  static const String wifiOnlyDownload = 'wifi_only_download';
-  static const String offlineBannerDismissed = 'offline_banner_dismissed';
-  static const String onboardingComplete = 'onboarding_complete';
-  static const String notifDrills = 'notif_drills';
-  static const String notifExams = 'notif_exams';
-  static const String notifCommunity = 'notif_community';
-  static const String notifStreaks = 'notif_streaks';
-  static const String notifMarketing = 'notif_marketing';
+  // ─── App Constants ────────────────────────────────────────────────────────
+  
+  /// Request timeout duration
+  static const Duration connectTimeout = Duration(seconds: 30);
+  static const Duration receiveTimeout = Duration(seconds: 30);
+  
+  /// Pagination
+  static const int defaultPageSize = 20;
+  static const int questionsPerPage = 50;
+  
+  /// Free tier limits
+  static const int freeTierSubjects = 2;
+  static const int freeTierAiQueries = 5;
+  
+  /// Nigeria country code
+  static const String nigeriaCountryCode = '+234';
+  
+  /// OTP length
+  static const int otpLength = 6;
+  
+  /// Exam durations (minutes)
+  static const int jambDuration = 120;
+  static const int waecDuration = 180;
+  static const int necoDuration = 180;
 }
