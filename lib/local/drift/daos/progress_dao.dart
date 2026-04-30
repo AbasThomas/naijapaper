@@ -3,29 +3,29 @@ import '../app_database.dart';
 
 part 'progress_dao.g.dart';
 
-@DriftAccessor(tables: [Progress])
+@DriftAccessor(tables: [ProgressTable])
 class ProgressDao extends DatabaseAccessor<AppDatabase> with _$ProgressDaoMixin {
   ProgressDao(AppDatabase db) : super(db);
 
   // Get progress for a topic
-  Future<Progres?> getProgressByTopic(String topicId) {
-    return (select(progress)..where((p) => p.topicId.equals(topicId)))
+  Future<ProgressTableData?> getProgressByTopic(String topicId) {
+    return (select(progressTable)..where((p) => p.topicId.equals(topicId)))
         .getSingleOrNull();
   }
 
   // Get all progress records
-  Future<List<Progres>> getAllProgress() {
-    return select(progress).get();
+  Future<List<ProgressTableData>> getAllProgress() {
+    return select(progressTable).get();
   }
 
   // Get progress for multiple topics
-  Future<List<Progres>> getProgressByTopics(List<String> topicIds) {
-    return (select(progress)..where((p) => p.topicId.isIn(topicIds))).get();
+  Future<List<ProgressTableData>> getProgressByTopics(List<String> topicIds) {
+    return (select(progressTable)..where((p) => p.topicId.isIn(topicIds))).get();
   }
 
   // Upsert progress
-  Future<void> upsertProgress(ProgressCompanion progressData) {
-    return into(progress).insert(progressData, mode: InsertMode.insertOrReplace);
+  Future<void> upsertProgress(ProgressTableCompanion progressData) {
+    return into(progressTable).insert(progressData, mode: InsertMode.insertOrReplace);
   }
 
   // Update progress after answering questions
@@ -38,7 +38,7 @@ class ProgressDao extends DatabaseAccessor<AppDatabase> with _$ProgressDaoMixin 
     if (existing == null) {
       // Create new progress record
       await upsertProgress(
-        ProgressCompanion.insert(
+        ProgressTableCompanion.insert(
           id: topicId,
           topicId: topicId,
           accuracyPct: isCorrect ? 100.0 : 0.0,
@@ -54,7 +54,7 @@ class ProgressDao extends DatabaseAccessor<AppDatabase> with _$ProgressDaoMixin 
       final newAccuracy = (correctAnswers / totalAttempts) * 100;
 
       await upsertProgress(
-        ProgressCompanion(
+        ProgressTableCompanion(
           id: Value(existing.id),
           topicId: Value(existing.topicId),
           accuracyPct: Value(newAccuracy),
@@ -67,14 +67,14 @@ class ProgressDao extends DatabaseAccessor<AppDatabase> with _$ProgressDaoMixin 
   }
 
   // Get unsynced progress records
-  Future<List<Progres>> getUnsyncedProgress() {
-    return (select(progress)..where((p) => p.synced.equals(false))).get();
+  Future<List<ProgressTableData>> getUnsyncedProgress() {
+    return (select(progressTable)..where((p) => p.synced.equals(false))).get();
   }
 
   // Mark progress as synced
   Future<void> markProgressSynced(String id) {
-    return (update(progress)..where((p) => p.id.equals(id)))
-        .write(const ProgressCompanion(synced: Value(true)));
+    return (update(progressTable)..where((p) => p.id.equals(id)))
+        .write(const ProgressTableCompanion(synced: Value(true)));
   }
 
   // Mark multiple progress records as synced
@@ -82,8 +82,8 @@ class ProgressDao extends DatabaseAccessor<AppDatabase> with _$ProgressDaoMixin 
     await batch((batch) {
       for (final id in ids) {
         batch.update(
-          progress,
-          const ProgressCompanion(synced: Value(true)),
+          progressTable,
+          const ProgressTableCompanion(synced: Value(true)),
           where: (p) => p.id.equals(id),
         );
       }
@@ -91,8 +91,8 @@ class ProgressDao extends DatabaseAccessor<AppDatabase> with _$ProgressDaoMixin 
   }
 
   // Get weak topics (accuracy < 40%)
-  Future<List<Progres>> getWeakTopics({int limit = 10}) {
-    return (select(progress)
+  Future<List<ProgressTableData>> getWeakTopics({int limit = 10}) {
+    return (select(progressTable)
           ..where((p) => p.accuracyPct.isSmallerThanValue(40.0))
           ..orderBy([(p) => OrderingTerm.asc(p.accuracyPct)])
           ..limit(limit))
@@ -100,8 +100,8 @@ class ProgressDao extends DatabaseAccessor<AppDatabase> with _$ProgressDaoMixin 
   }
 
   // Get strong topics (accuracy >= 70%)
-  Future<List<Progres>> getStrongTopics({int limit = 10}) {
-    return (select(progress)
+  Future<List<ProgressTableData>> getStrongTopics({int limit = 10}) {
+    return (select(progressTable)
           ..where((p) => p.accuracyPct.isBiggerOrEqualValue(70.0))
           ..orderBy([(p) => OrderingTerm.desc(p.accuracyPct)])
           ..limit(limit))
@@ -132,7 +132,7 @@ class ProgressDao extends DatabaseAccessor<AppDatabase> with _$ProgressDaoMixin 
 
   // Delete all progress (for reset)
   Future<void> deleteAllProgress() {
-    return delete(progress).go();
+    return delete(progressTable).go();
   }
 
   // Update progress from server (during sync)
@@ -143,7 +143,7 @@ class ProgressDao extends DatabaseAccessor<AppDatabase> with _$ProgressDaoMixin 
     final lastAttemptedAt = DateTime.parse(serverProgress['lastAttemptedAt'] as String);
 
     await upsertProgress(
-      ProgressCompanion(
+      ProgressTableCompanion(
         id: Value(topicId),
         topicId: Value(topicId),
         accuracyPct: Value(accuracyPct),

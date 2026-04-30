@@ -560,7 +560,7 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          const ShimmerLoader(width: double.infinity, height: 120, borderRadius: 16),
+          ShimmerLoader(width: double.infinity, height: 120, borderRadius: BorderRadius.circular(16)),
           const SizedBox(height: 24),
           GridView.builder(
             shrinkWrap: true,
@@ -573,10 +573,10 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
             ),
             itemCount: 6,
             itemBuilder: (context, index) {
-              return const ShimmerLoader(
+              return ShimmerLoader(
                 width: double.infinity,
                 height: double.infinity,
-                borderRadius: 12,
+                borderRadius: BorderRadius.circular(12),
               );
             },
           ),

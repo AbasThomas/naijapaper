@@ -695,10 +695,10 @@ class _ChallengesScreenState extends ConsumerState<ChallengesScreen>
           3,
           (index) => Padding(
             padding: const EdgeInsets.only(bottom: 16),
-            child: const ShimmerLoader(
+            child: ShimmerLoader(
               width: double.infinity,
               height: 200,
-              borderRadius: 12,
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
         ),

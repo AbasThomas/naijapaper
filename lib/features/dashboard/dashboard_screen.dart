@@ -606,17 +606,17 @@ class DashboardScreen extends ConsumerWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          const ShimmerLoader(width: 180, height: 180, borderRadius: 90),
+          ShimmerLoader(width: 180, height: 180, borderRadius: BorderRadius.circular(90)),
           const SizedBox(height: 24),
-          const ShimmerLoader(width: double.infinity, height: 100, borderRadius: 12),
+          ShimmerLoader(width: double.infinity, height: 100, borderRadius: BorderRadius.circular(12)),
           const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(child: ShimmerLoader(width: double.infinity, height: 100, borderRadius: 12)),
+              Expanded(child: ShimmerLoader(width: double.infinity, height: 100, borderRadius: BorderRadius.circular(12))),
               const SizedBox(width: 12),
-              Expanded(child: ShimmerLoader(width: double.infinity, height: 100, borderRadius: 12)),
+              Expanded(child: ShimmerLoader(width: double.infinity, height: 100, borderRadius: BorderRadius.circular(12))),
               const SizedBox(width: 12),
-              Expanded(child: ShimmerLoader(width: double.infinity, height: 100, borderRadius: 12)),
+              Expanded(child: ShimmerLoader(width: double.infinity, height: 100, borderRadius: BorderRadius.circular(12))),
             ],
           ),
         ],

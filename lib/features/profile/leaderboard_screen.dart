@@ -615,16 +615,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          const ShimmerLoader(width: double.infinity, height: 300, borderRadius: 16),
+          ShimmerLoader(width: double.infinity, height: 300, borderRadius: BorderRadius.circular(16)),
           const SizedBox(height: 16),
           ...List.generate(
             5,
             (index) => Padding(
               padding: const EdgeInsets.only(bottom: 12),
-              child: const ShimmerLoader(
+              child: ShimmerLoader(
                 width: double.infinity,
                 height: 72,
-                borderRadius: 12,
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
           ),

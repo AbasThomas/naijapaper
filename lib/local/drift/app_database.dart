@@ -41,7 +41,7 @@ class Questions extends Table {
 }
 
 /// User progress table — topic mastery tracking
-class Progress extends Table {
+class ProgressTable extends Table {
   TextColumn get id => text()();
   TextColumn get topicId => text()();
   RealColumn get accuracyPct => real()();
@@ -51,6 +51,9 @@ class Progress extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+  
+  @override
+  String get tableName => 'progress';
 }
 
 /// Sync queue table — pending operations to sync with server
@@ -123,7 +126,7 @@ class Subjects extends Table {
 
 @DriftDatabase(tables: [
   Questions,
-  Progress,
+  ProgressTable,
   SyncQueue,
   ExamSessions,
   AiExplanationCache,
@@ -179,30 +182,30 @@ class AppDatabase extends _$AppDatabase {
   // ─── Progress DAO ─────────────────────────────────────────────────────────
 
   /// Get progress for a topic
-  Future<Progres?> getProgressByTopic(String topicId) {
-    return (select(progress)..where((p) => p.topicId.equals(topicId)))
+  Future<ProgressTableData?> getProgressByTopic(String topicId) {
+    return (select(progressTable)..where((p) => p.topicId.equals(topicId)))
         .getSingleOrNull();
   }
 
   /// Get all progress records
-  Future<List<Progres>> getAllProgress() {
-    return select(progress).get();
+  Future<List<ProgressTableData>> getAllProgress() {
+    return select(progressTable).get();
   }
 
   /// Upsert progress
-  Future<void> upsertProgress(ProgressCompanion progressData) {
-    return into(progress).insertOnConflictUpdate(progressData);
+  Future<void> upsertProgress(ProgressTableCompanion progressData) {
+    return into(progressTable).insertOnConflictUpdate(progressData);
   }
 
   /// Get unsynced progress records
-  Future<List<Progres>> getUnsyncedProgress() {
-    return (select(progress)..where((p) => p.synced.equals(false))).get();
+  Future<List<ProgressTableData>> getUnsyncedProgress() {
+    return (select(progressTable)..where((p) => p.synced.equals(false))).get();
   }
 
   /// Mark progress as synced
   Future<void> markProgressSynced(String id) {
-    return (update(progress)..where((p) => p.id.equals(id)))
-        .write(const ProgressCompanion(synced: Value(true)));
+    return (update(progressTable)..where((p) => p.id.equals(id)))
+        .write(const ProgressTableCompanion(synced: Value(true)));
   }
 
   // ─── Sync Queue DAO ───────────────────────────────────────────────────────

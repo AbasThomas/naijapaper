@@ -48,6 +48,9 @@ class AppColors {
   /// Light amber — background for warning banners
   static const Color warningLight = Color(0xFFFFFAF0);
 
+  /// Blue — used for info messages, info states
+  static const Color info = Color(0xFF3182CE);
+
   // ─── Heatmap Colors ───────────────────────────────────────────────────────
   // These three are used on the Weak Topic Heatmap screen
 
