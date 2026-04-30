@@ -7,6 +7,7 @@ import '../../core/theme/app_colors.dart';
 import '../../shared/widgets/score_circle.dart';
 import 'data/exam_repository.dart';
 import 'domain/exam_result.dart';
+import 'presentation/exam_notifier.dart';
 
 class MockResultsScreen extends ConsumerWidget {
   final String sessionId;
@@ -68,10 +69,10 @@ class MockResultsScreen extends ConsumerWidget {
             child: ScoreCircle(
               score: result.percentage,
               size: 200,
-            ).animate().scale(
-              duration: 600.ms,
-              curve: Curves.elasticOut,
             ),
+          ).animate().scale(
+            duration: 600.ms,
+            curve: Curves.elasticOut,
           ),
           
           const SizedBox(height: 24),

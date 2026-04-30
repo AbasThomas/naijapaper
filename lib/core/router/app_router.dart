@@ -183,14 +183,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/ai-tutor',
         name: 'ai-tutor',
-        builder: (context, state) => const AiTutorHomeScreen(),
+        builder: (context, state) => const AITutorHomeScreen(),
       ),
       GoRoute(
-        path: '/ai-tutor/chat/:chatId',
+        path: '/ai-tutor/chat',
         name: 'ai-chat',
         builder: (context, state) {
-          final chatId = state.pathParameters['chatId'];
-          return AiChatScreen(chatId: chatId);
+          return const AIChatScreen();
         },
       ),
       GoRoute(

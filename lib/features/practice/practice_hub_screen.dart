@@ -7,7 +7,7 @@ import '../../shared/widgets/app_card.dart';
 import '../../shared/widgets/score_circle.dart';
 import '../../shared/widgets/shimmer_loader.dart';
 import 'presentation/exam_notifier.dart';
-import 'domain/exam_session.dart';
+import 'domain/exam_session.dart' as domain;
 
 class PracticeHubScreen extends ConsumerWidget {
   const PracticeHubScreen({super.key});
@@ -315,7 +315,7 @@ class PracticeHubScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildRecentExams(BuildContext context, List<ExamSession> exams) {
+  Widget _buildRecentExams(BuildContext context, List<domain.ExamSession> exams) {
     if (exams.isEmpty) {
       return _buildEmptyState();
     }
@@ -331,8 +331,8 @@ class PracticeHubScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildRecentExamCard(BuildContext context, ExamSession exam) {
-    final isCompleted = exam.status == ExamStatus.submitted;
+  Widget _buildRecentExamCard(BuildContext context, domain.ExamSession exam) {
+    final isCompleted = exam.status == 'submitted';
     
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -430,7 +430,7 @@ class PracticeHubScreen extends ConsumerWidget {
           child: ShimmerLoader(
             width: double.infinity,
             height: 92,
-            borderRadius: 12,
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       ),

@@ -1,10 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:drift/drift.dart';
 import '../../../local/drift/app_database.dart';
 import '../../../local/drift/daos/questions_dao.dart';
 import '../../../local/drift/daos/progress_dao.dart';
 import '../../../shared/providers/connectivity_provider.dart';
 import '../data/exam_repository.dart';
-import '../domain/exam_session.dart';
+import '../domain/exam_session.dart' as domain;
 import '../domain/exam_result.dart';
 
 // Repository provider
@@ -13,17 +14,17 @@ final examRepositoryProvider = Provider<ExamRepository>((ref) {
 });
 
 // Exam notifier provider (family - one per session)
-final examNotifierProvider = AsyncNotifierProvider.family<ExamNotifier, ExamSession?, String>(
+final examNotifierProvider = AsyncNotifierProvider.family<ExamNotifier, domain.ExamSession?, String>(
   ExamNotifier.new,
 );
 
-class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
+class ExamNotifier extends FamilyAsyncNotifier<domain.ExamSession?, String> {
   late final ExamRepository _repository;
   late final QuestionsDao _questionsDao;
   late final ProgressDao _progressDao;
 
   @override
-  Future<ExamSession?> build(String arg) async {
+  Future<domain.ExamSession?> build(String arg) async {
     _repository = ref.read(examRepositoryProvider);
     final database = ref.read(appDatabaseProvider);
     _questionsDao = QuestionsDao(database);
@@ -37,15 +38,15 @@ class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
     state = const AsyncValue.loading();
     
     try {
-      final isOnline = ref.read(connectivityProvider).value ?? false;
+      final isOnline = ref.read(isOnlineProvider);
       
-      ExamSession session;
+      domain.ExamSession session;
       
       if (isOnline) {
         // Fetch from API
         session = await _repository.getExamSession(arg);
         
-        // Save questions to local storage
+        // Save questions to locally
         await _saveQuestionsLocally(session);
       } else {
         // Load from local storage
@@ -66,12 +67,10 @@ class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
     try {
       final question = session.questions[questionIndex];
       
-      // Save to progress table
-      await _progressDao.recordAnswer(
-        questionId: question.id,
-        userAnswer: answer,
-        isCorrect: false, // We don't know yet
-        timeSpent: 0, // Track this separately if needed
+      // Save to progress table using updateProgressAfterAnswer
+      await _progressDao.updateProgressAfterAnswer(
+        topicId: question.topicId,
+        isCorrect: answer == question.correctAnswer,
       );
     } catch (e) {
       // Silent fail - don't interrupt user experience
@@ -85,7 +84,7 @@ class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
     if (session == null) return null;
     
     try {
-      final isOnline = ref.read(connectivityProvider).value ?? false;
+      final isOnline = ref.read(isOnlineProvider);
       
       if (isOnline) {
         // Submit to API
@@ -110,7 +109,7 @@ class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
   }
 
   /// Save questions to local storage
-  Future<void> _saveQuestionsLocally(ExamSession session) async {
+  Future<void> _saveQuestionsLocally(domain.ExamSession session) async {
     for (final question in session.questions) {
       await _questionsDao.insertQuestion(
         QuestionsCompanion.insert(
@@ -123,8 +122,8 @@ class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
           optionC: question.optionC,
           optionD: question.optionD,
           correctAnswer: question.correctAnswer,
-          explanationEn: Value(question.explanationEn),
-          explanationPidgin: Value(question.explanationPidgin),
+          explanationEn: const Value(''),
+          explanationPidgin: const Value(''),
           difficulty: question.difficulty,
           year: question.year,
           type: question.type,
@@ -135,7 +134,7 @@ class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
   }
 
   /// Load session from local storage
-  Future<ExamSession> _loadSessionLocally(String sessionId) async {
+  Future<domain.ExamSession> _loadSessionLocally(String sessionId) async {
     // In a real implementation, you'd store session metadata
     // For now, throw an error to indicate offline mode isn't fully ready
     throw Exception('Offline exam loading not yet implemented');
@@ -143,7 +142,7 @@ class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
 
   /// Update local progress with correct answers
   Future<void> _updateLocalProgress(
-    ExamSession session,
+    domain.ExamSession session,
     Map<int, String> answers,
     ExamResult result,
   ) async {
@@ -154,18 +153,16 @@ class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
       
       final isCorrect = userAnswer == question.correctAnswer;
       
-      await _progressDao.recordAnswer(
-        questionId: question.id,
-        userAnswer: userAnswer,
+      await _progressDao.updateProgressAfterAnswer(
+        topicId: question.topicId,
         isCorrect: isCorrect,
-        timeSpent: 0, // Could track this per question
       );
     }
   }
 
   /// Queue submission for sync when back online
   Future<void> _queueSubmissionForSync(
-    ExamSession session,
+    domain.ExamSession session,
     Map<int, String> answers,
   ) async {
     // This would use the sync_queue_dao
@@ -177,7 +174,7 @@ class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
 
   /// Calculate result locally (for offline mode)
   ExamResult _calculateLocalResult(
-    ExamSession session,
+    domain.ExamSession session,
     Map<int, String> answers,
   ) {
     int correctCount = 0;
@@ -237,8 +234,8 @@ class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
     }
     
     final percentage = session.totalQuestions > 0
-        ? (correctCount / session.totalQuestions * 100)
-        : 0;
+        ? (correctCount / session.totalQuestions * 100).toDouble()
+        : 0.0;
     
     // Simple grade calculation
     String grade;
@@ -265,8 +262,8 @@ class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
       percentile: 50, // Would need server data for real percentile
       timeTakenSeconds: session.durationMinutes * 60,
       avgSecondsPerQuestion: session.totalQuestions > 0
-          ? (session.durationMinutes * 60 / session.totalQuestions)
-          : 0,
+          ? (session.durationMinutes * 60 / session.totalQuestions).toDouble()
+          : 0.0,
       subjectBreakdown: subjectBreakdown,
       weakTopics: [], // Would need more logic
       xpEarned: correctCount * 10, // Simple XP calculation
@@ -275,7 +272,7 @@ class ExamNotifier extends FamilyAsyncNotifier<ExamSession?, String> {
 }
 
 // Provider for creating a new exam
-final createExamProvider = FutureProvider.family<ExamSession, CreateExamParams>(
+final createExamProvider = FutureProvider.family<domain.ExamSession, CreateExamParams>(
   (ref, params) async {
     final repository = ref.read(examRepositoryProvider);
     
@@ -313,7 +310,7 @@ class CreateExamParams {
 }
 
 // Provider for recent exams
-final recentExamsProvider = FutureProvider<List<ExamSession>>((ref) async {
+final recentExamsProvider = FutureProvider<List<domain.ExamSession>>((ref) async {
   final repository = ref.read(examRepositoryProvider);
   return await repository.getRecentExams(limit: 10);
 });

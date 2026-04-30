@@ -297,7 +297,7 @@ class _QuestionBankScreenState extends ConsumerState<QuestionBankScreen> {
           child: ShimmerLoader(
             width: double.infinity,
             height: 150,
-            borderRadius: 12,
+            borderRadius: BorderRadius.circular(12),
           ),
         );
       },

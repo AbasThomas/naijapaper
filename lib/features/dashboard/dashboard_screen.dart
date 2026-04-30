@@ -84,12 +84,11 @@ class DashboardScreen extends ConsumerWidget {
           Center(
             child: StreakRing(
               currentStreak: summary.currentStreak,
-              longestStreak: summary.longestStreak,
               size: 180,
-            ).animate().scale(
-              duration: 600.ms,
-              curve: Curves.elasticOut,
             ),
+          ).animate().scale(
+            duration: 600.ms,
+            curve: Curves.elasticOut,
           ),
 
           const SizedBox(height: 24),
