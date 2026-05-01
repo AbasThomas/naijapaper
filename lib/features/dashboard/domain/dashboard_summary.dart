@@ -11,6 +11,10 @@ class DashboardSummary {
   final bool dailyDrillCompleted;
   final int userRank;
   final List<ActivityItem> recentActivity;
+  final String? aiCoachMessage;
+  final UpcomingDeadline? upcomingDeadline;
+  final RecentMockScore? lastMockScore;
+  final bool showOfflineBanner;
 
   DashboardSummary({
     required this.level,
@@ -25,6 +29,10 @@ class DashboardSummary {
     required this.dailyDrillCompleted,
     required this.userRank,
     required this.recentActivity,
+    this.aiCoachMessage,
+    this.upcomingDeadline,
+    this.lastMockScore,
+    this.showOfflineBanner = false,
   });
 
   factory DashboardSummary.fromJson(Map<String, dynamic> json) {
@@ -45,6 +53,14 @@ class DashboardSummary {
       recentActivity: (json['recentActivity'] as List)
           .map((a) => ActivityItem.fromJson(a))
           .toList(),
+      aiCoachMessage: json['aiCoachMessage'] as String?,
+      upcomingDeadline: json['upcomingDeadline'] != null
+          ? UpcomingDeadline.fromJson(json['upcomingDeadline'])
+          : null,
+      lastMockScore: json['lastMockScore'] != null
+          ? RecentMockScore.fromJson(json['lastMockScore'])
+          : null,
+      showOfflineBanner: json['showOfflineBanner'] as bool? ?? false,
     );
   }
 }
@@ -91,6 +107,49 @@ class ActivityItem {
       title: json['title'] as String,
       description: json['description'] as String,
       timestamp: DateTime.parse(json['timestamp'] as String),
+    );
+  }
+}
+
+class UpcomingDeadline {
+  final String title;
+  final DateTime date;
+  final String type; // 'exam' or 'scholarship'
+
+  UpcomingDeadline({
+    required this.title,
+    required this.date,
+    required this.type,
+  });
+
+  factory UpcomingDeadline.fromJson(Map<String, dynamic> json) {
+    return UpcomingDeadline(
+      title: json['title'] as String,
+      date: DateTime.parse(json['date'] as String),
+      type: json['type'] as String,
+    );
+  }
+}
+
+class RecentMockScore {
+  final double score;
+  final String grade;
+  final String subject;
+  final DateTime date;
+
+  RecentMockScore({
+    required this.score,
+    required this.grade,
+    required this.subject,
+    required this.date,
+  });
+
+  factory RecentMockScore.fromJson(Map<String, dynamic> json) {
+    return RecentMockScore(
+      score: (json['score'] as num).toDouble(),
+      grade: json['grade'] as String,
+      subject: json['subject'] as String,
+      date: DateTime.parse(json['date'] as String),
     );
   }
 }

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
+// import 'package:speech_to_text/speech_to_text.dart' as stt; // Temporarily disabled
 import 'package:flutter_tts/flutter_tts.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/network/dio_client.dart';
@@ -83,7 +83,7 @@ class AIChatScreen extends ConsumerStatefulWidget {
 class _AIChatScreenState extends ConsumerState<AIChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  final stt.SpeechToText _speech = stt.SpeechToText();
+  // final stt.SpeechToText _speech = stt.SpeechToText(); // Temporarily disabled
   final FlutterTts _tts = FlutterTts();
   
   bool _isListening = false;
@@ -95,7 +95,7 @@ class _AIChatScreenState extends ConsumerState<AIChatScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeSpeech();
+    // _initializeSpeech(); // Temporarily disabled
     _initializeTts();
     
     if (widget.initialMessage != null) {
@@ -111,14 +111,15 @@ class _AIChatScreenState extends ConsumerState<AIChatScreen> {
     _messageController.dispose();
     _scrollController.dispose();
     _sseSubscription?.cancel();
-    _speech.stop();
+    // _speech.stop(); // Temporarily disabled
     _tts.stop();
     super.dispose();
   }
 
-  Future<void> _initializeSpeech() async {
-    await _speech.initialize();
-  }
+  // Temporarily disabled due to speech_to_text package issues
+  // Future<void> _initializeSpeech() async {
+  //   await _speech.initialize();
+  // }
 
   Future<void> _initializeTts() async {
     await _tts.setLanguage('en-NG'); // Nigerian English
@@ -398,24 +399,31 @@ class _AIChatScreenState extends ConsumerState<AIChatScreen> {
     );
   }
 
+  // Temporarily disabled due to speech_to_text package issues
   Future<void> _toggleListening() async {
-    if (_isListening) {
-      await _speech.stop();
-      setState(() => _isListening = false);
-    } else {
-      final available = await _speech.initialize();
-      if (available) {
-        setState(() => _isListening = true);
-        await _speech.listen(
-          onResult: (result) {
-            setState(() {
-              _messageController.text = result.recognizedWords;
-            });
-          },
-          localeId: _language == 'pidgin' ? 'en-NG' : 'en-US',
-        );
-      }
-    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Voice input temporarily unavailable'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+    // if (_isListening) {
+    //   await _speech.stop();
+    //   setState(() => _isListening = false);
+    // } else {
+    //   final available = await _speech.initialize();
+    //   if (available) {
+    //     setState(() => _isListening = true);
+    //     await _speech.listen(
+    //       onResult: (result) {
+    //         setState(() {
+    //           _messageController.text = result.recognizedWords;
+    //         });
+    //       },
+    //       localeId: _language == 'pidgin' ? 'en-NG' : 'en-US',
+    //     );
+    //   }
+    // }
   }
 
   Future<void> _sendMessage() async {

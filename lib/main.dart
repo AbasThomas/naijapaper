@@ -9,8 +9,12 @@ import 'local/hive/hive_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
-  await Firebase.initializeApp();
+  // Initialize Firebase (optional—skip if not configured)
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    debugPrint('Firebase init error (continuing without it): $e');
+  }
 
   // Initialize Hive
   await HiveService.instance.init();
