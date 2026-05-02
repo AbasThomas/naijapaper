@@ -677,7 +677,7 @@ class _ChallengesScreenState extends ConsumerState<ChallengesScreen>
     if (challenge.id.contains('exam')) {
       context.go('/practice/mock/setup');
     } else if (challenge.id.contains('drill')) {
-      context.go('/practice/daily-drill');
+      context.go('/practice/drill');
     } else if (challenge.id.contains('flashcard')) {
       context.go('/practice/flashcards');
     } else {

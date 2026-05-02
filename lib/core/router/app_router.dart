@@ -18,6 +18,7 @@ import '../../features/onboarding/notification_permission_screen.dart';
 import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/dashboard/heatmap_screen.dart';
 import '../../features/dashboard/study_plan_screen.dart';
+import '../../features/dashboard/notifications_screen.dart';
 
 // Practice screens
 import '../../features/practice/practice_hub_screen.dart';
@@ -28,6 +29,8 @@ import '../../features/practice/answer_review_screen.dart';
 import '../../features/practice/question_bank_screen.dart';
 import '../../features/practice/flashcard_screen.dart';
 import '../../features/practice/daily_drill_screen.dart';
+import '../../features/practice/bookmarks_screen.dart';
+import '../../features/practice/practice_history_screen.dart';
 
 // AI Tutor screens
 import '../../features/ai_tutor/ai_tutor_home_screen.dart';
@@ -57,6 +60,11 @@ import '../../features/gamification/challenges_screen.dart';
 // Tracker screens
 import '../../features/tracker/tracker_screen.dart';
 import '../../features/tracker/tracker_detail_screen.dart';
+
+// Admin screens
+import '../../features/admin/admin_dashboard_screen.dart';
+import '../../features/admin/admin_student_detail_screen.dart';
+import '../../features/admin/admin_setup_screen.dart';
 
 /// AppRouter — GoRouter configuration with all 42 routes
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -127,6 +135,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: 'study-plan',
         builder: (context, state) => const StudyPlanScreen(),
       ),
+      GoRoute(
+        path: '/notifications',
+        name: 'notifications',
+        builder: (context, state) => const NotificationsScreen(),
+      ),
 
       // ─── Practice Routes ────────────────────────────────────────────────
       GoRoute(
@@ -177,6 +190,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/practice/drill',
         name: 'daily-drill',
         builder: (context, state) => const DailyDrillScreen(),
+      ),
+      GoRoute(
+        path: '/practice/bookmarks',
+        name: 'bookmarks',
+        builder: (context, state) => const BookmarksScreen(),
+      ),
+      GoRoute(
+        path: '/practice/history',
+        name: 'practice-history',
+        builder: (context, state) => const PracticeHistoryScreen(),
       ),
 
       // ─── AI Tutor Routes ────────────────────────────────────────────────
@@ -303,6 +326,26 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           final itemId = state.pathParameters['itemId']!;
           return TrackerDetailScreen(type: type, itemId: itemId);
         },
+      ),
+
+      // ─── Institution Admin Routes ─────────────────────────────────────────────
+      GoRoute(
+        path: '/admin',
+        name: 'admin-dashboard',
+        builder: (context, state) => const AdminDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/admin/students/:studentId',
+        name: 'admin-student-detail',
+        builder: (context, state) {
+          final studentId = state.pathParameters['studentId']!;
+          return AdminStudentDetailScreen(studentId: studentId);
+        },
+      ),
+      GoRoute(
+        path: '/admin/setup',
+        name: 'admin-setup',
+        builder: (context, state) => const AdminSetupScreen(),
       ),
     ],
   );

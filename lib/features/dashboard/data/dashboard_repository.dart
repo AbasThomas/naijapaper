@@ -84,6 +84,19 @@ class DashboardRepository {
           timestamp: DateTime.now().subtract(const Duration(days: 1)),
         ),
       ],
+      aiCoachMessage: "Kedu! You're doing great with Algebra. Let's tackle some Geometry today to level up your score. Ready to start your drill?",
+      upcomingDeadline: UpcomingDeadline(
+        title: "JAMB UTME 2026",
+        date: DateTime.now().add(const Duration(days: 45)),
+        type: "exam",
+      ),
+      lastMockScore: RecentMockScore(
+        score: 78.5,
+        grade: "B2",
+        subject: "Physics",
+        date: DateTime.now().subtract(const Duration(days: 2)),
+      ),
+      showOfflineBanner: true,
     );
   }
 }

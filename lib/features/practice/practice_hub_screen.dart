@@ -219,7 +219,7 @@ class PracticeHubScreen extends ConsumerWidget {
         'subtitle': '5 quick questions',
         'icon': Icons.bolt,
         'color': AppColors.error,
-        'route': '/practice/daily-drill',
+        'route': '/practice/drill',
       },
       {
         'title': 'Past Questions',
